@@ -79,6 +79,7 @@ namespace PKPhysics
 
             float mass = area * density;
 
+
             body = new PKBody<Box>(position, density, mass, restitution, isStatic, box);
             return true;
         }
