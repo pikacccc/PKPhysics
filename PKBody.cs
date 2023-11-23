@@ -28,6 +28,7 @@ namespace PKPhysics
 
         public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, T shape)
         {
+
             this.position = pos;
             this.Density = density;
             this.rotation = 0;

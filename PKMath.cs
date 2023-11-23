@@ -30,7 +30,7 @@ namespace PKPhysics
         public static PKVector Normalize(PKVector a)
         {
             float len = Length(a);
-
+            if (len == 0) return a;
             return a / len;
         }
 
