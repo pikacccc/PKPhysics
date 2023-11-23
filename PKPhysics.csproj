@@ -41,8 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PKBody.cs" />
+    <Compile Include="PKBodyUtil.cs" />
     <Compile Include="PKMath.cs" />
+    <Compile Include="PKShape\Box.cs" />
+    <Compile Include="PKShape\Cricle.cs" />
+    <Compile Include="PKShape\ShapeBase.cs" />
     <Compile Include="PKVector.cs" />
+    <Compile Include="PKWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
