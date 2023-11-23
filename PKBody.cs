@@ -18,6 +18,14 @@ namespace PKPhysics
 
         public T shape;
 
+        public PKVector Position
+        {
+            get
+            {
+                return position;
+            }
+        }
+
         public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, T shape)
         {
             this.position = pos;
@@ -29,6 +37,16 @@ namespace PKPhysics
             this.IsStatic = isStatic;
             this.Area = shape.GetArea();
             this.shape = shape;
+        }
+
+        public void Move(PKVector amount)
+        {
+            this.position += amount;
+        }
+
+        public void MoveTo(PKVector pos)
+        {
+            this.position = pos;
         }
     }
 }

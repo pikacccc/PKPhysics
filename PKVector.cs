@@ -65,7 +65,7 @@ namespace PKPhysics
             return this / mod;
         }
 
-        public bool Equal(PKVector other)
+        public bool Equals(PKVector other)
         {
             return this.X == other.X && this.Y == other.Y;
         }
@@ -74,7 +74,7 @@ namespace PKPhysics
         {
             if (obj is PKVector other)
             {
-                return Equal(other);
+                return Equals(other);
             }
             return false;
         }
