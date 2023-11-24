@@ -68,13 +68,21 @@ namespace PKPhysics
 
         public PKVector[] GetTransformedVertics()
         {
-            if (this.transVertics == null) return null;
-            PKTransform trans = new PKTransform(this.position, this.rotation);
-
-            for (int i = 0; i < this.transVertics.Length; i++)
+            if (this.transVertics == null)
             {
-                transVertics[i] = PKVector.Transform(shape.Vertics[i], trans);
+                this.transformUpdatedRequired = false;
+                return null;
             }
+            if (this.transformUpdatedRequired)
+            {
+                PKTransform trans = new PKTransform(this.position, this.rotation);
+
+                for (int i = 0; i < this.transVertics.Length; i++)
+                {
+                    transVertics[i] = PKVector.Transform(shape.Vertics[i], trans);
+                }
+            }
+            this.transformUpdatedRequired = false;
             return transVertics;
         }
     }
