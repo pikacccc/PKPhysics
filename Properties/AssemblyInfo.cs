@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("PKPhysics")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("91Act")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PKPhysics")]
-[assembly: AssemblyCopyright("Copyright © 91Act 2023")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
