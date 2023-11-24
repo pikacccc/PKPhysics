@@ -1,4 +1,5 @@
 ﻿using PKPhysics.PKShape;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PKPhysics
 {
@@ -18,6 +19,8 @@ namespace PKPhysics
 
         public T shape;
 
+        public PKVector[] transVertics;
+
         public PKVector Position
         {
             get
@@ -25,6 +28,8 @@ namespace PKPhysics
                 return position;
             }
         }
+
+        public bool transformUpdatedRequired;
 
         public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, T shape)
         {
@@ -38,16 +43,39 @@ namespace PKPhysics
             this.IsStatic = isStatic;
             this.Area = shape.GetArea();
             this.shape = shape;
+
+            this.transVertics = new PKVector[4];
+            this.transformUpdatedRequired = true;
         }
 
         public void Move(PKVector amount)
         {
             this.position += amount;
+            this.transformUpdatedRequired = true;
         }
 
         public void MoveTo(PKVector pos)
         {
             this.position = pos;
+            this.transformUpdatedRequired = true;
+        }
+
+        public void Rotate(float dr)
+        {
+            this.rotation += dr;
+            this.transformUpdatedRequired = true;
+        }
+
+        public PKVector[] GetTransformedVertics()
+        {
+            if (this.transVertics == null) return null;
+            PKTransform trans = new PKTransform(this.position, this.rotation);
+
+            for (int i = 0; i < this.transVertics.Length; i++)
+            {
+                transVertics[i] = PKVector.Transform(shape.Vertics[i], trans);
+            }
+            return transVertics;
         }
     }
 }

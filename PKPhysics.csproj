@@ -48,6 +48,7 @@
     <Compile Include="PKShape\Box.cs" />
     <Compile Include="PKShape\Cricle.cs" />
     <Compile Include="PKShape\ShapeBase.cs" />
+    <Compile Include="PKTransform.cs" />
     <Compile Include="PKVector.cs" />
     <Compile Include="PKWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

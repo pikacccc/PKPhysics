@@ -17,7 +17,21 @@ namespace PKPhysics.PKShape
     {
         public ShapeType ShapeType = ShapeType.None;
 
+        protected PKVector[] vertics;
+        public PKVector[] Vertics
+        {
+            get { return vertics; }
+        }
+
+        protected int[] triangles = { };
+        public int[] Tiangles
+        {
+            get { return triangles; }
+        }
+
         public abstract float GetArea();
+
+        protected abstract void CreateVertics();
+        protected abstract void CreateTriangles();
     }
 }
- 

@@ -9,7 +9,6 @@ namespace PKPhysics.PKShape
     public class Cricle : ShapeBase
     {
         public float Radius;
-        public ShapeType ShapeType = ShapeType.Circle;
 
         public Cricle(float r)
         {
@@ -19,11 +18,24 @@ namespace PKPhysics.PKShape
         public Cricle(Cricle other)
         {
             this.Radius = other.Radius;
+            this.ShapeType = ShapeType.Circle;
+            this.CreateVertics();
+            this.CreateTriangles();
         }
 
         public override float GetArea()
         {
             return Radius * Radius * (float)Math.PI;
+        }
+
+        protected override void CreateTriangles()
+        {
+            this.triangles = null;
+        }
+
+        protected override void CreateVertics()
+        {
+            this.vertics = null;
         }
     }
 }

@@ -54,6 +54,11 @@ namespace PKPhysics
             return a.X * b.X + a.Y * b.Y;
         }
 
+        internal static PKVector Transform(PKVector v, PKTransform trans)
+        {
+            return new PKVector(trans.Cos * v.X - trans.Sin * v.Y + trans.PositionX, trans.Sin * v.X + trans.Cos * v.Y + trans.PositionY);
+        }
+
         public float GetModulus()
         {
             return (float)Math.Sqrt(X * X + Y * Y);
