@@ -19,7 +19,7 @@ namespace PKPhysics
 
         public T shape;
 
-        public PKVector[] transVertics;
+        private PKVector[] transVertics;
 
         public PKVector Position
         {
