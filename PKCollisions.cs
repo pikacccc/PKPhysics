@@ -8,8 +8,10 @@ namespace PKPhysics
 {
     public static class PKCollisions
     {
-        public static bool IntersectPolygons(PKVector[] verticsA, PKVector[] verticsB)
+        public static bool IntersectPolygons(PKVector[] verticsA, PKVector[] verticsB, out PKVector nor, out float depth)
         {
+            nor = PKVector.Zero;
+            depth = float.MaxValue;
             for (int i = 0; i < verticsA.Length; i++)
             {
                 PKVector edge = verticsA[(i + 1) % verticsA.Length] - verticsA[i];
@@ -19,6 +21,13 @@ namespace PKPhysics
                 PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
 
                 if (maxA <= minB || maxB <= minA) { return false; }
+
+                float tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
+                if (depth > tempDepth)
+                {
+                    depth = tempDepth;
+                    nor = axis;
+                }
             }
 
             for (int i = 0; i < verticsB.Length; i++)
@@ -30,9 +39,35 @@ namespace PKPhysics
                 PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
 
                 if (maxA <= minB || maxB <= minA) { return false; }
+
+                float tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
+                if (depth > tempDepth)
+                {
+                    depth = tempDepth;
+                    nor = axis;
+                }
             }
 
+            depth /= PKMath.Length(nor);
+            nor = PKMath.Normalize(nor);
+
+            PKVector centerA = GetArithmeticMean(verticsA);
+            PKVector centerB = GetArithmeticMean(verticsB);
+
+            PKVector dir = centerB - centerA;
+            if (PKMath.Dot(nor, dir) < 0) { nor = -nor; }
             return true;
+        }
+
+        public static PKVector GetArithmeticMean(PKVector[] vertics)
+        {
+            PKVector center = PKVector.Zero;
+            for (int i = 0; i < vertics.Length; ++i)
+            {
+                center.X += vertics[i].X;
+                center.Y += vertics[i].Y;
+            }
+            return center / (float)vertics.Length;
         }
 
         public static void ProjectVertics(PKVector[] vertics, PKVector axis, out float min, out float max)
