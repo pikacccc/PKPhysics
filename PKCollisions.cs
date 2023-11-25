@@ -3,11 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace PKPhysics
 {
     public static class PKCollisions
     {
+
+        public static bool IntersectPolygonsAndCricle(PKVector[] vertics, PKVector center, float radius, out PKVector nor, out float depth)
+        {
+            nor = PKVector.Zero;
+            depth = float.MaxValue;
+
+            float maxA, minB, maxB, minA;
+            float tempDepth = 0;
+            PKVector axis = PKVector.Zero;
+
+            for (int i = 0; i < vertics.Length; i++)
+            {
+                PKVector edge = vertics[(i + 1) % vertics.Length] - vertics[i];
+                axis = new PKVector(-edge.Y, edge.X);
+
+                PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
+                PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
+
+                if (maxA <= minB || maxB <= minA) { return false; }
+
+                tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
+                if (depth > tempDepth)
+                {
+                    depth = tempDepth;
+                    nor = axis;
+                }
+            }
+
+            int index = FindClosestVerticsIndex(center, vertics);
+            axis = vertics[index] - center;
+
+            PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
+            PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
+
+            if (maxA <= minB || maxB <= minA) { return false; }
+
+            tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
+            if (depth > tempDepth)
+            {
+                depth = tempDepth;
+                nor = axis;
+            }
+
+            depth /= PKMath.Length(nor);
+            nor = PKMath.Normalize(nor);
+
+            PKVector centerB = GetArithmeticMean(vertics);
+
+            PKVector dir = centerB - center;
+            if (PKMath.Dot(nor, dir) < 0) { nor = -nor; }
+            return true;
+        }
+
         public static bool IntersectPolygons(PKVector[] verticsA, PKVector[] verticsB, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;
@@ -59,7 +113,7 @@ namespace PKPhysics
             return true;
         }
 
-        public static PKVector GetArithmeticMean(PKVector[] vertics)
+        private static PKVector GetArithmeticMean(PKVector[] vertics)
         {
             PKVector center = PKVector.Zero;
             for (int i = 0; i < vertics.Length; ++i)
@@ -70,7 +124,7 @@ namespace PKPhysics
             return center / (float)vertics.Length;
         }
 
-        public static void ProjectVertics(PKVector[] vertics, PKVector axis, out float min, out float max)
+        private static void ProjectVertics(PKVector[] vertics, PKVector axis, out float min, out float max)
         {
             min = float.MaxValue;
             max = float.MinValue;
@@ -80,6 +134,42 @@ namespace PKPhysics
                 if (proj < min) min = proj;
                 if (proj > max) max = proj;
             }
+        }
+
+        private static void ProjectCricle(PKVector center, float radius, PKVector axis, out float min, out float max)
+        {
+            PKVector dir = PKMath.Normalize(axis);
+            PKVector tempVec = dir * radius;
+
+            PKVector p1 = center + tempVec;
+            PKVector p2 = center - tempVec;
+
+            min = PKMath.Dot(axis, p2);
+            max = PKMath.Dot(axis, p1);
+
+            if (min > max)
+            {
+                var t = min;
+                min = max;
+                max = t;
+            }
+        }
+
+        private static int FindClosestVerticsIndex(PKVector PO, PKVector[] vertics)
+        {
+            int index = -1;
+            float minDis = float.MaxValue;
+            for (int i = 0; i < vertics.Length; ++i)
+            {
+                float tempDis = PKMath.Distance(vertics[i], PO);
+                if (tempDis < minDis)
+                {
+                    index = i;
+                    minDis = tempDis;
+                }
+
+            }
+            return index;
         }
 
         public static bool IntersectCricles(PKVector centerA, PKVector centerB, float radiusA, float radiusB, out PKVector nor, out float depth)
