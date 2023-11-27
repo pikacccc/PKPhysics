@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace PKPhysics
 {
-    public sealed class PKBody<T> where T : ShapeBase
+    public sealed class PKBody
     {
         private PKVector position;
         private PKVector linearVelocity;
@@ -17,7 +17,7 @@ namespace PKPhysics
 
         public bool IsStatic;
 
-        public T shape;
+        public ShapeBase shape;
 
         private PKVector[] transVertics;
 
@@ -31,7 +31,7 @@ namespace PKPhysics
 
         public bool transformUpdatedRequired;
 
-        public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, T shape)
+        public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, ShapeBase shape)
         {
 
             this.position = pos;

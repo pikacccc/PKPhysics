@@ -15,7 +15,7 @@ namespace PKPhysics.PKShape
 
     public abstract class ShapeBase
     {
-        public ShapeType ShapeType = ShapeType.None;
+        public ShapeType ShapeType;
 
         protected PKVector[] vertics;
         public PKVector[] Vertics

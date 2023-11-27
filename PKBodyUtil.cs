@@ -4,7 +4,7 @@ namespace PKPhysics
 {
     public static class PKBodyUtil
     {
-        public static bool CreateCircleBody(float radius, PKVector position, float density, bool isStatic, float restitution, out PKBody<Cricle> body, out string errorMessage)
+        public static bool CreateCircleBody(float radius, PKVector position, float density, bool isStatic, float restitution, out PKBody body, out string errorMessage)
         {
             body = null;
             errorMessage = string.Empty;
@@ -39,11 +39,11 @@ namespace PKPhysics
 
             float mass = area * density;
 
-            body = new PKBody<Cricle>(position, density, mass, restitution, isStatic, cricle);
+            body = new PKBody(position, density, mass, restitution, isStatic, cricle);
             return true;
         }
 
-        public static bool CreateBoxBody(float width, float height, PKVector position, float density, bool isStatic, float restitution, out PKBody<Box> body, out string errorMessage)
+        public static bool CreateBoxBody(float width, float height, PKVector position, float density, bool isStatic, float restitution, out PKBody body, out string errorMessage)
         {
             body = null;
             errorMessage = string.Empty;
@@ -80,7 +80,7 @@ namespace PKPhysics
             float mass = area * density;
 
 
-            body = new PKBody<Box>(position, density, mass, restitution, isStatic, box);
+            body = new PKBody(position, density, mass, restitution, isStatic, box);
             return true;
         }
     }

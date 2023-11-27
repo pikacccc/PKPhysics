@@ -13,6 +13,9 @@ namespace PKPhysics.PKShape
         public Cricle(float r)
         {
             this.Radius = r;
+            this.ShapeType = ShapeType.Circle;
+            this.CreateVertics();
+            this.CreateTriangles();
         }
 
         public Cricle(Cricle other)

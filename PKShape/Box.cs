@@ -15,6 +15,9 @@ namespace PKPhysics.PKShape
         {
             this.Width = other.Width;
             this.Height = other.Height;
+            this.ShapeType = ShapeType.Box;
+            this.CreateTriangles();
+            this.CreateVertics();
         }
 
         public Box(float width, float height)
