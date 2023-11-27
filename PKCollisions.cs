@@ -10,7 +10,7 @@ namespace PKPhysics
     public static class PKCollisions
     {
 
-        public static bool IntersectPolygonsAndCricle(PKVector[] vertics, PKVector center, float radius, out PKVector nor, out float depth)
+        public static bool IntersectPolygonAndCricle(PKVector[] vertics, PKVector center, float radius, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;
             depth = float.MaxValue;

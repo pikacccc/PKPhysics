@@ -67,6 +67,7 @@ namespace PKPhysics
         public PKVector Normalized()
         {
             var mod = GetModulus();
+            if(mod == 0) return PKVector.Zero;
             return this / mod;
         }
 

@@ -48,6 +48,12 @@ namespace PKPhysics
             this.transformUpdatedRequired = true;
         }
 
+        public void Update(float dt)
+        {
+            this.position += linearVelocity * dt;
+            this.rotation += rotationalVelocity * dt;
+        }
+
         public void Move(PKVector amount)
         {
             this.position += amount;
