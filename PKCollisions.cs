@@ -39,7 +39,7 @@ namespace PKPhysics
 
             int index = FindClosestVerticsIndex(center, vertics);
             axis = vertics[index] - center;
-
+            axis = axis.Normalized();
             PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
             PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
 
@@ -67,7 +67,7 @@ namespace PKPhysics
             {
                 PKVector edge = verticsA[(i + 1) % verticsA.Length] - verticsA[i];
                 PKVector axis = new PKVector(-edge.Y, edge.X);
-
+                axis = axis.Normalized();
                 PKCollisions.ProjectVertics(verticsA, axis, out float minA, out float maxA);
                 PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
 
@@ -88,7 +88,7 @@ namespace PKPhysics
 
                 PKCollisions.ProjectVertics(verticsA, axis, out float minA, out float maxA);
                 PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
-
+                axis = axis.Normalized();
                 if (maxA <= minB || maxB <= minA) { return false; }
 
                 float tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
@@ -98,9 +98,6 @@ namespace PKPhysics
                     nor = axis;
                 }
             }
-
-            depth /= PKMath.Length(nor);
-            nor = PKMath.Normalize(nor);
 
             PKVector centerA = GetArithmeticMean(verticsA);
             PKVector centerB = GetArithmeticMean(verticsB);

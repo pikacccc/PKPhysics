@@ -57,11 +57,14 @@ namespace PKPhysics
 
         public void Update(float dt)
         {
-            this.linearVelocity += this.force/this.Mass * dt;
+            this.linearVelocity += this.force / this.Mass * dt;
             this.position += linearVelocity * dt;
             this.rotation += rotationalVelocity * dt;
             this.force = PKVector.Zero;
-            this.transformUpdatedRequired = true;
+            if (PKMath.Length(this.linearVelocity) != 0f)
+            {
+                this.transformUpdatedRequired = true;
+            }
         }
 
         public void AddForce(PKVector force)
