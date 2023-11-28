@@ -48,6 +48,23 @@ namespace PKPhysics
                     var bodyB = bodyList[j];
                     if (Collide(bodyA, bodyB, out PKVector nor, out float depth))
                     {
+                        if (bodyA.IsStatic && bodyB.IsStatic)
+                        {
+                            continue;
+                        }
+                        else if (bodyA.IsStatic)
+                        {
+                            bodyB.Move(nor * depth * 0.5f);
+                        }
+                        else if (bodyB.IsStatic)
+                        {
+                            bodyA.Move(-nor * depth * 0.5f);
+                        }
+                        else
+                        {
+                            bodyA.Move(-nor * depth * 0.5f);
+                            bodyB.Move(nor * depth * 0.5f);
+                        }
                         ProcessCollide(bodyA, bodyB, nor);
                     }
                 }
@@ -58,12 +75,14 @@ namespace PKPhysics
         {
             PKVector relativeVelocity = bodyB.LinearVelocity - bodyA.LinearVelocity;
             if (PKMath.Dot(relativeVelocity, nor) > 0) return;
-            float e = Math.Min(bodyA.Restitution, bodyB.Restitution);
 
-            float j = -(1f + e) * PKMath.Dot(relativeVelocity, nor) / (1 / bodyA.Mass + 1 / bodyB.Mass);
-            bodyA.LinearVelocity -= (j / bodyA.Mass) * nor;
-            bodyB.LinearVelocity += (j / bodyB.Mass) * nor;
+            float e = Math.Min(bodyA.Restitution, bodyB.Restitution);
+            float j = -(1f + e) * PKMath.Dot(relativeVelocity, nor) / (bodyA.InvMass + bodyB.InvMass);
+            PKVector I = j * nor;
+            bodyA.LinearVelocity -= I * bodyA.InvMass;
+            bodyB.LinearVelocity += I * bodyB.InvMass;
         }
+
         public bool Collide(PKBody bodyA, PKBody bodyB, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;

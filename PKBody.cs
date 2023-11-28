@@ -12,6 +12,20 @@ namespace PKPhysics
         private PKVector force;
         public float Density;
         public float Mass;
+        public float InvMass
+        {
+            get
+            {
+                if (IsStatic)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1f / Mass;
+                }
+            }
+        }
         public float Restitution;
         public float Area;
 
