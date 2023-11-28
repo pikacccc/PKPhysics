@@ -44,6 +44,11 @@ namespace PKPhysics
             return new PKVector(a.X * b, a.Y * b);
         }
 
+        public static PKVector operator *(float b, PKVector a)
+        {
+            return new PKVector(a.X * b, a.Y * b);
+        }
+
         public static PKVector operator /(PKVector a, float b)
         {
             return new PKVector(a.X / b, a.Y / b);
@@ -67,7 +72,7 @@ namespace PKPhysics
         public PKVector Normalized()
         {
             var mod = GetModulus();
-            if(mod == 0) return PKVector.Zero;
+            if (mod == 0) return PKVector.Zero;
             return this / mod;
         }
 

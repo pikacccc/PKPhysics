@@ -23,7 +23,7 @@ namespace PKPhysics
             {
                 PKVector edge = vertics[(i + 1) % vertics.Length] - vertics[i];
                 axis = new PKVector(-edge.Y, edge.X);
-
+                axis = PKMath.Normalize(axis);
                 PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
                 PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
 
@@ -51,9 +51,6 @@ namespace PKPhysics
                 depth = tempDepth;
                 nor = axis;
             }
-
-            depth /= PKMath.Length(nor);
-            nor = PKMath.Normalize(nor);
 
             PKVector centerB = GetArithmeticMean(vertics);
 

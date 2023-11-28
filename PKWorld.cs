@@ -1,4 +1,5 @@
 ﻿using PKPhysics.PKShape;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -47,13 +48,22 @@ namespace PKPhysics
                     var bodyB = bodyList[j];
                     if (Collide(bodyA, bodyB, out PKVector nor, out float depth))
                     {
-                        bodyA.Move(-nor * depth * 0.5f);
-                        bodyB.Move(nor * depth * 0.5f);
+                        ProcessCollide(bodyA, bodyB, nor);
                     }
                 }
             }
         }
 
+        public void ProcessCollide(PKBody bodyA, PKBody bodyB, PKVector nor)
+        {
+            PKVector relativeVelocity = bodyB.LinearVelocity - bodyA.LinearVelocity;
+            if (PKMath.Dot(relativeVelocity, nor) > 0) return;
+            float e = Math.Min(bodyA.Restitution, bodyB.Restitution);
+
+            float j = -(1f + e) * PKMath.Dot(relativeVelocity, nor) / (1 / bodyA.Mass + 1 / bodyB.Mass);
+            bodyA.LinearVelocity -= (j / bodyA.Mass) * nor;
+            bodyB.LinearVelocity += (j / bodyB.Mass) * nor;
+        }
         public bool Collide(PKBody bodyA, PKBody bodyB, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;
@@ -87,7 +97,7 @@ namespace PKPhysics
                     return PKCollisions.IntersectCricles(bodyA.Position, bodyB.Position, (bodyA.shape as Cricle).Radius, (bodyA.shape as Cricle).Radius, out nor, out depth);
                 }
             }
-            return true;
+            return false;
         }
     }
 }

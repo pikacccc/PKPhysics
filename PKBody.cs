@@ -9,7 +9,7 @@ namespace PKPhysics
         private PKVector linearVelocity;
         private float rotation;
         private float rotationalVelocity;
-
+        private PKVector force;
         public float Density;
         public float Mass;
         public float Restitution;
@@ -29,6 +29,12 @@ namespace PKPhysics
             }
         }
 
+        public PKVector LinearVelocity
+        {
+            get { return linearVelocity; }
+            set { linearVelocity = value; }
+        }
+
         public bool transformUpdatedRequired;
 
         public PKBody(PKVector pos, float density, float mass, float restitution, bool isStatic, ShapeBase shape)
@@ -38,6 +44,7 @@ namespace PKPhysics
             this.Density = density;
             this.rotation = 0;
             this.rotationalVelocity = 0;
+            this.force = PKVector.Zero;
             this.Mass = mass;
             this.Restitution = restitution;
             this.IsStatic = isStatic;
@@ -50,8 +57,16 @@ namespace PKPhysics
 
         public void Update(float dt)
         {
+            this.linearVelocity += this.force/this.Mass * dt;
             this.position += linearVelocity * dt;
             this.rotation += rotationalVelocity * dt;
+            this.force = PKVector.Zero;
+            this.transformUpdatedRequired = true;
+        }
+
+        public void AddForce(PKVector force)
+        {
+            this.force = force;
         }
 
         public void Move(PKVector amount)
