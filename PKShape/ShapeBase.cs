@@ -9,7 +9,7 @@ namespace PKPhysics.PKShape
     public enum ShapeType
     {
         None,
-        Box,
+        Polygon,
         Circle
     }
 

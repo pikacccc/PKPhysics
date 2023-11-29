@@ -15,7 +15,7 @@ namespace PKPhysics.PKShape
         {
             this.Width = other.Width;
             this.Height = other.Height;
-            this.ShapeType = ShapeType.Box;
+            this.ShapeType = ShapeType.Polygon;
             this.CreateTriangles();
             this.CreateVertics();
         }
@@ -24,7 +24,7 @@ namespace PKPhysics.PKShape
         {
             this.Width = width;
             this.Height = height;
-            this.ShapeType = ShapeType.Box;
+            this.ShapeType = ShapeType.Polygon;
             this.CreateTriangles();
             this.CreateVertics();
         }

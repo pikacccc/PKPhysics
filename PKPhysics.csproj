@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PKAABB.cs" />
     <Compile Include="PKBody.cs" />
     <Compile Include="PKBodyUtil.cs" />
     <Compile Include="PKCollisions.cs" />

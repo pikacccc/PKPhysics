@@ -37,7 +37,7 @@ namespace PKPhysics
         {
             for (int i = 0; i < bodyList.Count; i++)
             {
-                bodyList[i].Update(time);
+                bodyList[i].Update(time, this.gravity);
             }
 
             for (int i = 0; i < bodyList.Count - 1; i++)
@@ -65,13 +65,13 @@ namespace PKPhysics
                             bodyA.Move(-nor * depth * 0.5f);
                             bodyB.Move(nor * depth * 0.5f);
                         }
-                        ProcessCollide(bodyA, bodyB, nor);
+                        ProcessingCollide(bodyA, bodyB, nor);
                     }
                 }
             }
         }
 
-        public void ProcessCollide(PKBody bodyA, PKBody bodyB, PKVector nor)
+        public void ProcessingCollide(PKBody bodyA, PKBody bodyB, PKVector nor)
         {
             PKVector relativeVelocity = bodyB.LinearVelocity - bodyA.LinearVelocity;
             if (PKMath.Dot(relativeVelocity, nor) > 0) return;
@@ -91,15 +91,15 @@ namespace PKPhysics
             ShapeType shapeTypeA = bodyA.shape.ShapeType;
             ShapeType shapeTypeB = bodyB.shape.ShapeType;
 
-            if (shapeTypeA == ShapeType.Box)
+            if (shapeTypeA == ShapeType.Polygon)
             {
-                if (shapeTypeB == ShapeType.Box)
+                if (shapeTypeB == ShapeType.Polygon)
                 {
-                    return PKCollisions.IntersectPolygons(bodyA.GetTransformedVertics(), bodyB.GetTransformedVertics(), out nor, out depth);
+                    return PKCollisions.IntersectPolygons(bodyA.Position, bodyA.GetTransformedVertics(), bodyB.Position, bodyB.GetTransformedVertics(), out nor, out depth);
                 }
                 else if (shapeTypeB == ShapeType.Circle)
                 {
-                    bool res = PKCollisions.IntersectPolygonAndCricle(bodyA.GetTransformedVertics(), bodyB.Position, (bodyB.shape as Cricle).Radius, out nor, out depth);
+                    bool res = PKCollisions.IntersectPolygonAndCricle(bodyA.GetTransformedVertics(), bodyA.Position, bodyB.Position, (bodyB.shape as Cricle).Radius, out nor, out depth);
 
                     nor = -nor;
                     return res;
@@ -107,9 +107,9 @@ namespace PKPhysics
             }
             else if (shapeTypeA == ShapeType.Circle)
             {
-                if (shapeTypeB == ShapeType.Box)
+                if (shapeTypeB == ShapeType.Polygon)
                 {
-                    return PKCollisions.IntersectPolygonAndCricle(bodyB.GetTransformedVertics(), bodyA.Position, (bodyA.shape as Cricle).Radius, out nor, out depth);
+                    return PKCollisions.IntersectPolygonAndCricle(bodyB.GetTransformedVertics(), bodyB.Position, bodyA.Position, (bodyA.shape as Cricle).Radius, out nor, out depth);
                 }
                 else if (shapeTypeB == ShapeType.Circle)
                 {
