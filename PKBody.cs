@@ -151,7 +151,7 @@ namespace PKPhysics
                     }
 
                 }
-                else if (shape.ShapeType == ShapeType.Polygon)
+                else if (shape.ShapeType == ShapeType.Circle)
                 {
                     minX = position.X - (shape as Cricle).Radius;
                     minY = position.Y - (shape as Cricle).Radius;
