@@ -113,7 +113,7 @@ namespace PKPhysics
                 }
                 else if (shapeTypeB == ShapeType.Circle)
                 {
-                    return PKCollisions.IntersectCricles(bodyA.Position, bodyB.Position, (bodyA.shape as Cricle).Radius, (bodyA.shape as Cricle).Radius, out nor, out depth);
+                    return PKCollisions.IntersectCricles(bodyA.Position, bodyB.Position, (bodyA.shape as Cricle).Radius, (bodyB.shape as Cricle).Radius, out nor, out depth);
                 }
             }
             return false;
