@@ -70,9 +70,11 @@ namespace PKPhysics
             this.AABBUpdateRequired = true;
         }
 
-        internal void Update(float dt, PKVector gravity)
+        internal void Step(float dt, PKVector gravity, int iteration)
         {
             if (IsStatic) { return; }
+            dt /= iteration;
+
             this.linearVelocity += this.force / this.Mass * dt + gravity * dt;
             this.position += linearVelocity * dt;
             this.rotation += rotationalVelocity * dt;

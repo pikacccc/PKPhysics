@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PKPhysics.PKShape;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,40 @@ namespace PKPhysics
 {
     public static class PKCollisions
     {
+        public static void FindContactPoints(PKBody bodyA, PKBody bodyB, out PKVector contact1, out PKVector contact2, out int contactCount)
+        {
+            contact1 = PKVector.Zero;
+            contact2 = PKVector.Zero;
+            contactCount = 0;
+
+            ShapeType shapeTypeA = bodyA.shape.ShapeType;
+            ShapeType shapeTypeB = bodyB.shape.ShapeType;
+
+            if (shapeTypeA == ShapeType.Polygon)
+            {
+                if (shapeTypeB == ShapeType.Polygon)
+                {
+
+                }
+                else if (shapeTypeB == ShapeType.Circle)
+                {
+
+                }
+            }
+            else if (shapeTypeA == ShapeType.Circle)
+            {
+                if (shapeTypeB == ShapeType.Polygon)
+                {
+
+                }
+                else if (shapeTypeB == ShapeType.Circle)
+                {
+                    FindContactPoint(bodyA.Position, (bodyA.shape as Cricle).Radius, bodyB.Position, (bodyB.shape as Cricle).Radius, out contact1);
+                    contactCount = 1;
+                }
+            }
+        }
+
         public static bool IntersectPolygonAndCricle(PKVector[] vertics, PKVector polygonCenter, PKVector center, float radius, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;
@@ -56,53 +91,10 @@ namespace PKPhysics
             return true;
         }
 
-        public static bool IntersectPolygonAndCricle(PKVector[] vertics, PKVector center, float radius, out PKVector nor, out float depth)
+        public static void FindContactPoint(PKVector centerA, float radiusA, PKVector centerB, float radiusB, out PKVector cp)
         {
-            nor = PKVector.Zero;
-            depth = float.MaxValue;
-
-            float maxA, minB, maxB, minA;
-            float tempDepth = 0;
-            PKVector axis = PKVector.Zero;
-
-            for (int i = 0; i < vertics.Length; i++)
-            {
-                PKVector edge = vertics[(i + 1) % vertics.Length] - vertics[i];
-                axis = new PKVector(-edge.Y, edge.X);
-                axis = PKMath.Normalize(axis);
-                PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
-                PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
-
-                if (maxA <= minB || maxB <= minA) { return false; }
-
-                tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
-                if (depth > tempDepth)
-                {
-                    depth = tempDepth;
-                    nor = axis;
-                }
-            }
-
-            int index = FindClosestVerticsIndex(center, vertics);
-            axis = vertics[index] - center;
-            axis = axis.Normalized();
-            PKCollisions.ProjectVertics(vertics, axis, out minA, out maxA);
-            PKCollisions.ProjectCricle(center, radius, axis, out minB, out maxB);
-
-            if (maxA <= minB || maxB <= minA) { return false; }
-
-            tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
-            if (depth > tempDepth)
-            {
-                depth = tempDepth;
-                nor = axis;
-            }
-
-            PKVector centerB = GetArithmeticMean(vertics);
-
-            PKVector dir = centerB - center;
-            if (PKMath.Dot(nor, dir) < 0) { nor = -nor; }
-            return true;
+            PKVector dir = PKMath.Normalize(centerB - centerA);
+            cp = centerA + dir * radiusA;
         }
 
         public static bool IntersectPolygons(PKVector centerA, PKVector[] verticsA, PKVector centerB, PKVector[] verticsB, out PKVector nor, out float depth)
@@ -150,52 +142,40 @@ namespace PKPhysics
             return true;
         }
 
-        public static bool IntersectPolygons(PKVector[] verticsA, PKVector[] verticsB, out PKVector nor, out float depth)
+        public static bool Collide(PKBody bodyA, PKBody bodyB, out PKVector nor, out float depth)
         {
             nor = PKVector.Zero;
-            depth = float.MaxValue;
-            for (int i = 0; i < verticsA.Length; i++)
+            depth = 0f;
+
+            ShapeType shapeTypeA = bodyA.shape.ShapeType;
+            ShapeType shapeTypeB = bodyB.shape.ShapeType;
+
+            if (shapeTypeA == ShapeType.Polygon)
             {
-                PKVector edge = verticsA[(i + 1) % verticsA.Length] - verticsA[i];
-                PKVector axis = new PKVector(-edge.Y, edge.X);
-                axis = axis.Normalized();
-                PKCollisions.ProjectVertics(verticsA, axis, out float minA, out float maxA);
-                PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
-
-                if (maxA <= minB || maxB <= minA) { return false; }
-
-                float tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
-                if (depth > tempDepth)
+                if (shapeTypeB == ShapeType.Polygon)
                 {
-                    depth = tempDepth;
-                    nor = axis;
+                    return PKCollisions.IntersectPolygons(bodyA.Position, bodyA.GetTransformedVertics(), bodyB.Position, bodyB.GetTransformedVertics(), out nor, out depth);
+                }
+                else if (shapeTypeB == ShapeType.Circle)
+                {
+                    bool res = PKCollisions.IntersectPolygonAndCricle(bodyA.GetTransformedVertics(), bodyA.Position, bodyB.Position, (bodyB.shape as Cricle).Radius, out nor, out depth);
+
+                    nor = -nor;
+                    return res;
                 }
             }
-
-            for (int i = 0; i < verticsB.Length; i++)
+            else if (shapeTypeA == ShapeType.Circle)
             {
-                PKVector edge = verticsB[(i + 1) % verticsB.Length] - verticsB[i];
-                PKVector axis = new PKVector(-edge.Y, edge.X);
-
-                PKCollisions.ProjectVertics(verticsA, axis, out float minA, out float maxA);
-                PKCollisions.ProjectVertics(verticsB, axis, out float minB, out float maxB);
-                axis = axis.Normalized();
-                if (maxA <= minB || maxB <= minA) { return false; }
-
-                float tempDepth = (float)Math.Min(maxA - minB, maxB - minA);
-                if (depth > tempDepth)
+                if (shapeTypeB == ShapeType.Polygon)
                 {
-                    depth = tempDepth;
-                    nor = axis;
+                    return PKCollisions.IntersectPolygonAndCricle(bodyB.GetTransformedVertics(), bodyB.Position, bodyA.Position, (bodyA.shape as Cricle).Radius, out nor, out depth);
+                }
+                else if (shapeTypeB == ShapeType.Circle)
+                {
+                    return PKCollisions.IntersectCricles(bodyA.Position, bodyB.Position, (bodyA.shape as Cricle).Radius, (bodyB.shape as Cricle).Radius, out nor, out depth);
                 }
             }
-
-            PKVector centerA = GetArithmeticMean(verticsA);
-            PKVector centerB = GetArithmeticMean(verticsB);
-
-            PKVector dir = centerB - centerA;
-            if (PKMath.Dot(nor, dir) < 0) { nor = -nor; }
-            return true;
+            return false;
         }
 
         private static PKVector GetArithmeticMean(PKVector[] vertics)

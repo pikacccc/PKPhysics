@@ -13,6 +13,14 @@ namespace PKPhysics
             return value;
         }
 
+        public static int Clamp(int value, int min, int max)
+        {
+            if (min == max) return min;
+            if (min > max) throw new ArgumentOutOfRangeException("最小值大于最大值");
+            if (value > max) return max;
+            if (value < min) return min;
+            return value;
+        }
         public static float Length(PKVector a)
         {
             return (float)Math.Sqrt(a.X * a.X + a.Y * a.Y);

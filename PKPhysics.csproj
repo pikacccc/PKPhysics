@@ -45,6 +45,7 @@
     <Compile Include="PKBody.cs" />
     <Compile Include="PKBodyUtil.cs" />
     <Compile Include="PKCollisions.cs" />
+    <Compile Include="PKManifold.cs" />
     <Compile Include="PKMath.cs" />
     <Compile Include="PKShape\Box.cs" />
     <Compile Include="PKShape\Cricle.cs" />
